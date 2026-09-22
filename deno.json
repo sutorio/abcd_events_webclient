@@ -1,0 +1,28 @@
+{
+  "imports": {
+    "@solidjs/start-devtools": "npm:@solidjs/start-devtools@^1.0.0-next.4",
+    "@solidjs/meta": "npm:@solidjs/meta@^1.0.0-next.2",
+    "@solidjs/router": "npm:@solidjs/router@^2.0.0-next.26",
+    "@solidjs/web": "npm:@solidjs/web@^2.0.0-rc.9",
+    "solid-js": "npm:solid-js@^2.0.0-rc.9"
+  },
+  "tasks": {
+    "start": "deno run -A npm:vite",
+    "dev": "deno run -A npm:vite",
+    "check": "deno check src/",
+    "build": "deno task check && deno run -A npm:vite build",
+    "serve": "deno run -A npm:vite preview"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@solidjs/web",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "erasableSyntaxOnly": true
+  },
+  "nodeModulesDir": "auto"
+}
