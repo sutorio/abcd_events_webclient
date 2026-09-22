@@ -1,8 +1,7 @@
-## Solid `basic` template
+# AbCD Events Webclient
 
-`bare` plus the app floors most projects want: `@solidjs/router` with file-system routes, per-page titles via `@solidjs/meta`, and a `vitest` test suite.
+`solidjs` client for AbCD Events. `@solidjs/router` with file-system routes, per-page titles via `@solidjs/meta`.
 
-**Deployment contract:** still zero server dependencies — `vite build` emits a purely static site; deploy `dist/client` to any static host.
 
 ## How it works
 
@@ -29,48 +28,25 @@ Every route is code-split automatically; navigating loads only that page's modul
 
 `vitest` runs component tests in jsdom via `@solidjs/testing-library` — add `*.test.tsx` files next to what they test. See `src/components/Counter.test.tsx` for the pattern; note Solid 2.0 batches DOM updates, so tests call `flush()` after firing events before asserting on the DOM.
 
-## Usage
-
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
-
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
-
-```bash
-$ npm install # or pnpm install or yarn install
-```
-
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
-
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm run dev` or `npm start`
+### `deno task dev`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 
-### `npm run build`
+### `deno task build`
 
 Builds the static production site to `dist/client`, routes code-split.
 
-### `npm run serve`
+### `deno task serve`
 
 Serves the production build locally.
 
-### `npm test`
+### `deno test`
 
 Runs the test suite.
-
-## The `ssr` flip
-
-Streaming SSR is one boolean: add `ssr: true` next to `start: true` in `vite.config.ts`. `src/App.tsx`, `src/Document.tsx`, and the routes carry over unchanged — `<HydrationScript />` is already in place in the Document (in client mode it is stripped from the static shell). The build then emits a request handler to `dist/server`; to run it on Node, use `start: { node: true }` so the build also emits a ready-to-run `dist/server/node.js` (`fullstack`'s README covers deployment).
-
-## Growing out of `basic`
-
-- **A server** (data loading via server functions, mutations, sessions, API routes) is the `fullstack` template — same structure, more floors.
-- Want less? The `bare` template is the same shape without the router.
-
-## This project was created with the [Solid CLI](https://github.com/solidjs-community/solid-cli)
