@@ -21,3 +21,7 @@ Use these whenever you are debugging reactivity (something doesn't update, updat
   - `{"method":"costs"}` — running cost tables for the open session
 
 Name your signals/memos/effects (the `{ name: "..." }` option) — attribution reports scopes by name.
+
+## Agent skills
+
+Engineering-skill config (issue tracker, triage labels, domain docs): `docs/agents/`. Read on demand — do not duplicate here.

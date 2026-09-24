@@ -5,32 +5,58 @@
  *
  * @see https://www.solidjs.com/blog/solid-2-0-rc-the-big-reveal
  *
- * Dependencies **ONLY** used in this file are imported directly.
- * They are development-time only: the aim is to keep the import map
- * in `deno.json` for runtime dependencies only.
- * This means versions must be updated manually; I find the tradeoff
- * worthwhile from a cognitive perspective.
- *
  * @module
  */
 
-// deno-lint-ignore-file no-import-prefix
-import { defineConfig } from "npm:vite@^8.3.0";
-import { default as solidPlugin } from "npm:@solidjs/vite-plugin@^3.0.0-next.44";
-import { fileRoutes } from "npm:filesystem-routing@0.3.0/vite";
-import "npm:@solidjs/diagnostics@^2.0.0-rc.9";
+import { defineConfig, type Plugin } from "vite";
+import { default as denoPlugin } from "@deno/vite-plugin";
+import { default as solidPlugin } from "@solidjs/vite-plugin";
+import { fileRoutes } from "filesystem-routing/vite";
+import "@solidjs/diagnostics";
 
 const privateDir = new URL("./private/", import.meta.url);
+
+/**
+ * `@deno/vite-plugin` wrapper with a patch for Vite `virtual:` modules.
+ *
+ * Deno's loader throws on `virtual:` IDs (`Unsupported scheme "virtual"`)
+ * instead of returning null and letting other plugins claim them. Upstream
+ * still open: https://github.com/denoland/deno-vite-plugin/issues/101
+ *
+ * Forwards any options to the real Deno plugin; wraps its resolveId so
+ * those IDs are skipped and Solid / Vite plugins can resolve them normally.
+ */
+function patchedDenoPlugin(
+  ...args: Parameters<typeof denoPlugin>
+): Plugin[] {
+  return denoPlugin(...args).map((plugin) => {
+    if (plugin.name !== "deno" && plugin.name !== "deno:prefix") {
+      return plugin;
+    }
+    const hook = plugin.resolveId;
+    if (!hook) return plugin;
+    const original = typeof hook === "function" ? hook : hook.handler;
+
+    return {
+      ...plugin,
+      async resolveId(id, importer, options) {
+        if (id.startsWith("virtual:") || id.startsWith("\0")) return;
+        return await original.call(this, id, importer, options);
+      },
+    };
+  });
+}
 
 export default defineConfig({
   clearScreen: false,
   plugins: [
+    patchedDenoPlugin(),
     solidPlugin({
       start: true,
       extensions: [".jsx", ".tsx"],
       diagnostics: true,
     }),
-    fileRoutes(),
+    fileRoutes({ types: true }),
   ],
   server: {
     https: {

@@ -1,10 +1,16 @@
 {
   "imports": {
-    "@solidjs/start-devtools": "npm:@solidjs/start-devtools@^1.0.0-next.4",
+    "@/": "./src/",
+    "@deno/vite-plugin": "npm:@deno/vite-plugin@^2.0.3",
+    "@solidjs/diagnostics": "npm:@solidjs/diagnostics@2.0.0-rc.9", // dev
+    "@solidjs/start-devtools": "npm:@solidjs/start-devtools@^1.0.0-next.4", // dev
     "@solidjs/meta": "npm:@solidjs/meta@^1.0.0-next.2",
     "@solidjs/router": "npm:@solidjs/router@^2.0.0-next.26",
+    "@solidjs/vite-plugin": "npm:@solidjs/vite-plugin@3.0.0-next.44", // dev
     "@solidjs/web": "npm:@solidjs/web@^2.0.0-rc.9",
-    "solid-js": "npm:solid-js@^2.0.0-rc.9"
+    "filesystem-routing": "npm:filesystem-routing@0.3.0", // dev
+    "solid-js": "npm:solid-js@^2.0.0-rc.9",
+    "vite": "npm:vite@^8.3.0" // dev
   },
   "tasks": {
     "start": "deno run -A npm:vite",
