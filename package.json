@@ -1,0 +1,36 @@
+{
+  "name": "abcd_events_webclient",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "lint": "oxlint .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check ."
+  },
+  "dependencies": {
+    "@solidjs/meta": "1.0.0-next.2",
+    "@solidjs/router": "2.0.0-next.26",
+    "@solidjs/web": "2.0.0-rc.9",
+    "solid-js": "2.0.0-rc.9"
+  },
+  "devDependencies": {
+    "@solidjs/diagnostics": "2.0.0-rc.9",
+    "@solidjs/start-devtools": "1.0.0-next.4",
+    "@solidjs/vite-plugin": "3.0.0-next.44",
+    "@types/node": "^24.5.2",
+    "filesystem-routing": "0.3.0",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

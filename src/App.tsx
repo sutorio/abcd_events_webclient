@@ -1,7 +1,7 @@
 import { Title } from "@solidjs/meta";
 import { Loading } from "solid-js";
 import { paths, Router } from "@/router.ts";
-import "@/App.css" with { type: "css" };
+import "@/App.css";
 
 export default function App() {
   return (

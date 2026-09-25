@@ -2,7 +2,6 @@
 
 `solidjs` client for AbCD Events. `@solidjs/router` with file-system routes, per-page titles via `@solidjs/meta`.
 
-
 ## How it works
 
 There is no `index.html` and no mount file. `@solidjs/vite-plugin`'s turnkey mode (`start: true` in `vite.config.ts`) generates the entries around two conventions:
@@ -32,21 +31,29 @@ Every route is code-split automatically; navigating loads only that page's modul
 
 In the project directory, you can run:
 
-### `deno task dev`
+### `npm run dev`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in development mode.<br>
+Open the HTTPS URL Vite prints (certs in `private/`) in the browser.
 
 The page will reload if you make edits.<br>
 
-### `deno task build`
+### `npm run build`
 
 Builds the static production site to `dist/client`, routes code-split.
 
-### `deno task serve`
+### `npm run preview`
 
 Serves the production build locally.
 
-### `deno test`
+### `npm run check`
 
-Runs the test suite.
+Typechecks with TypeScript 7 (`tsc --noEmit`, Go-native compiler).
+
+### `npm run lint`
+
+Lints with Oxlint.
+
+### `npm run fmt` / `npm run fmt:check`
+
+Formats with Oxfmt (or checks without writing).

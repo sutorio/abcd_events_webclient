@@ -12,8 +12,7 @@ const getUser = query(async (id: string) => {
   // (getRequestEvent() is undefined in the browser, where location wins).
   const origin = getRequestEvent()?.request.url ?? location.origin;
   const response = await fetch(new URL("/users.json", origin));
-  const users: Record<string, { name: string; title: string }> = await response
-    .json();
+  const users: Record<string, { name: string; title: string }> = await response.json();
   return users[id] ?? { name: "Unknown", title: "No such user" };
 }, "user");
 
