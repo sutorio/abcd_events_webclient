@@ -1,0 +1,36 @@
+{
+  "profile": [
+    {
+      "id": 1,
+      "name": "Owner"
+    }
+  ],
+  "organisation": [
+    {
+      "id": 1,
+      "name": "AbCD Events",
+      "description": "Events for the AbCD community.",
+      "branding": ""
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "organisationId": 1,
+      "title": "Spring Gathering",
+      "startsAt": "2026-04-12T18:00:00",
+      "venue": "Community Hall",
+      "description": "An evening of food, music, and neighbours."
+    },
+    {
+      "id": 2,
+      "organisationId": 1,
+      "title": "Workshop Saturday",
+      "startsAt": "2026-05-03T10:00:00",
+      "venue": "Studio B",
+      "description": "Hands-on session — bring comfortable clothes."
+    }
+  ],
+  "customers": [],
+  "bookings": []
+}

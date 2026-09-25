@@ -12,6 +12,7 @@ import { defineConfig } from "vitest/config";
 import solidPlugin from "@solidjs/vite-plugin";
 import { fileRoutes } from "filesystem-routing/vite";
 import "@solidjs/diagnostics";
+import { mockApiPlugin } from "./mock/vite-plugin.ts";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const privateDir = path.join(root, "private");
@@ -23,6 +24,7 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
+    mockApiPlugin(),
     solidPlugin({
       start: true,
       extensions: [".jsx", ".tsx"],
@@ -40,5 +42,5 @@ export default defineConfig({
     globals: true,
     environment: "happy-dom",
     setupFiles: "vitest.setup.ts",
-  }
+  },
 });

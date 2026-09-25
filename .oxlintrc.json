@@ -8,12 +8,7 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": [
-    "dist/**",
-    "node_modules/**",
-    ".agents/**",
-    "docs/agents/**"
-  ],
+  "ignorePatterns": ["dist/**", "node_modules/**", ".agents/**", "docs/agents/**"],
   "overrides": [
     {
       "files": ["src/**/*.{ts,tsx}"],
