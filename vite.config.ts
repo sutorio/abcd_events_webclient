@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import solidPlugin from "@solidjs/vite-plugin";
 import { fileRoutes } from "filesystem-routing/vite";
 import "@solidjs/diagnostics";
@@ -36,4 +36,9 @@ export default defineConfig({
       cert: fs.readFileSync(path.join(privateDir, "devcert.pem")),
     },
   },
+  test: {
+    globals: true,
+    environment: "happy-dom",
+    setupFiles: "vitest.setup.ts",
+  }
 });
