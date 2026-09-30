@@ -1,8 +1,29 @@
 {
-  "profile": [
+  "users": [
     {
       "id": 1,
-      "name": "Owner"
+      "name": "Owner",
+      "email": "owner@abcdevents.example"
+    }
+  ],
+  "memberships": [
+    {
+      "id": 1,
+      "userId": 1,
+      "organisationId": 1,
+      "role": "owner"
+    }
+  ],
+  "venues": [
+    {
+      "id": 1,
+      "organisationId": 1,
+      "name": "AbCD Studio",
+      "address": "",
+      "coordinates": {
+        "lat": 51.4545,
+        "lng": -2.5879
+      }
     }
   ],
   "organisation": [
@@ -10,6 +31,10 @@
       "id": 1,
       "name": "AbCD Events",
       "description": "Events for the AbCD community.",
+      "about": "We run welcoming events for families — music, movement, and making friends.",
+      "contactEmail": "hello@abcdevents.example",
+      "contactPhone": "+447700900000",
+      "defaultVenueId": 1,
       "branding": ""
     }
   ],
@@ -17,20 +42,256 @@
     {
       "id": 1,
       "organisationId": 1,
-      "title": "Spring Gathering",
-      "startsAt": "2026-04-12T18:00:00",
-      "venue": "Community Hall",
-      "description": "An evening of food, music, and neighbours."
+      "venueId": 1,
+      "visibility": "public",
+      "featured": true,
+      "title": "Silent Disco — Younger children",
+      "startsAt": "2026-06-14T14:00:00",
+      "description": "An afternoon silent disco for younger children and their accompanying adults. Headsets for adults and children; babies welcome (free, registered).",
+      "capacity": 40
     },
     {
       "id": 2,
       "organisationId": 1,
-      "title": "Workshop Saturday",
-      "startsAt": "2026-05-03T10:00:00",
-      "venue": "Studio B",
-      "description": "Hands-on session — bring comfortable clothes."
+      "venueId": 1,
+      "visibility": "public",
+      "featured": false,
+      "title": "Silent Disco — Older children",
+      "startsAt": "2026-06-14T17:00:00",
+      "description": "An early-evening silent disco for slightly older children and their accompanying adults. Headsets for adults and children; babies welcome (free, registered).",
+      "capacity": 40
     }
   ],
-  "customers": [],
-  "bookings": []
+  "priceTiers": [
+    {
+      "id": 1,
+      "organisationId": 1,
+      "eventId": 1,
+      "label": "Adult",
+      "minAgeYears": 16,
+      "maxAgeYears": null,
+      "pricePence": 1200,
+      "consumesCapacity": true
+    },
+    {
+      "id": 2,
+      "organisationId": 1,
+      "eventId": 1,
+      "label": "Child",
+      "minAgeYears": 1,
+      "maxAgeYears": 15,
+      "pricePence": 800,
+      "consumesCapacity": true
+    },
+    {
+      "id": 3,
+      "organisationId": 1,
+      "eventId": 1,
+      "label": "Baby",
+      "minAgeYears": 0,
+      "maxAgeYears": 0,
+      "pricePence": 0,
+      "consumesCapacity": false
+    },
+    {
+      "id": 4,
+      "organisationId": 1,
+      "eventId": 2,
+      "label": "Adult",
+      "minAgeYears": 16,
+      "maxAgeYears": null,
+      "pricePence": 1200,
+      "consumesCapacity": true
+    },
+    {
+      "id": 5,
+      "organisationId": 1,
+      "eventId": 2,
+      "label": "Child",
+      "minAgeYears": 1,
+      "maxAgeYears": 15,
+      "pricePence": 800,
+      "consumesCapacity": true
+    },
+    {
+      "id": 6,
+      "organisationId": 1,
+      "eventId": 2,
+      "label": "Baby",
+      "minAgeYears": 0,
+      "maxAgeYears": 0,
+      "pricePence": 0,
+      "consumesCapacity": false
+    }
+  ],
+  "customers": [
+    {
+      "organisationId": 1,
+      "email": "parent@example.com",
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "marketingOptIn": true,
+      "id": 1
+    }
+  ],
+  "bookings": [
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-09-29T09:58:31.353Z",
+      "id": 1
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-09-29T13:46:30.748Z",
+      "id": 2
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-09-29T14:03:06.210Z",
+      "id": 3
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-09-29T14:08:46.417Z",
+      "id": 4
+    }
+  ],
+  "tickets": [
+    {
+      "organisationId": 1,
+      "bookingId": 1,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 1
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 1,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 1,
+      "id": 2
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 1,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 1,
+      "id": 3
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 2,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 4
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 2,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 4,
+      "id": 5
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 2,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 4,
+      "id": 6
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 3,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 7
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 3,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 7,
+      "id": 8
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 3,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 7,
+      "id": 9
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 4,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 10
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 4,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 10,
+      "id": 11
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 4,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 10,
+      "id": 12
+    }
+  ]
 }

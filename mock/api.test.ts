@@ -1,93 +1,204 @@
 /**
- * Explanatory tests for the throwaway mock API.
- *
- * In dev, the browser hits same-origin `/api/...` on Vite. The plugin bridges
- * that to a loopback json-server (see `vite-plugin.ts`). These tests talk to
- * that same loopback server directly — so they document the REST shape without
- * spinning up HTTPS Vite.
+ * Explanatory tests for the org-scoped mock API (ky + resources + ops).
  *
  * @vitest-environment node
  */
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createApi, ensureCustomer, type KyInstance } from "../src/api-client.ts";
+import {
+  booking,
+  bookings,
+  event,
+  events,
+  memberships,
+  organisation,
+  priceTier,
+  ticket,
+  tickets,
+  user,
+  venue,
+} from "../src/api-resources.ts";
 import { startMockServer } from "./vite-plugin.ts";
 
-let origin: string;
+const organisationId = 1;
+
+let api: KyInstance;
 let close: () => Promise<void>;
 
 beforeAll(async () => {
-  ({ origin, close } = await startMockServer());
+  const mock = await startMockServer();
+  close = mock.close;
+  api = createApi(`${mock.origin}/`);
 });
 
 afterAll(async () => {
   await close();
 });
 
-async function api(
-  path: string,
-  init?: RequestInit,
-): Promise<Response> {
-  return await fetch(new URL(path, origin), init);
-}
+describe("org-scoped mock shape", () => {
+  it("keeps User outside the org box, linked via Membership", async () => {
+    const found = await api.get(user.path(1)).json(user.schema);
+    const forUser = await api
+      .get(memberships.path, { searchParams: { userId: 1 } })
+      .json(memberships.schema);
 
-describe("mock REST (json-server over mock/db.json)", () => {
-  it("exposes one profile and one organisation (MVP singletons as arrays-of-one)", async () => {
-    const profile = await (await api("/profile/1")).json();
-    const organisation = await (await api("/organisation/1")).json();
-
-    expect(profile).toMatchObject({ id: 1, name: expect.any(String) });
-    expect(organisation).toMatchObject({
-      id: 1,
-      name: expect.any(String),
-      description: expect.any(String),
-    });
+    expect(found.email).toContain("@");
+    expect(forUser).toEqual([
+      expect.objectContaining({
+        userId: 1,
+        organisationId: 1,
+        role: "owner",
+      }),
+    ]);
   });
 
-  it("lists events with listing fields the public UI will need", async () => {
-    const events = await (await api("/events")).json();
+  it("organisation references a Venue; featured lives on Event", async () => {
+    const org = await api
+      .get(organisation.path(organisationId))
+      .json(organisation.schema);
+    const foundVenue = await api
+      .get(venue.path(org.defaultVenueId))
+      .json(venue.schema);
 
-    expect(events.length).toBeGreaterThan(0);
-    expect(events[0]).toMatchObject({
-      id: expect.any(Number),
-      organisationId: 1,
-      title: expect.any(String),
-      startsAt: expect.any(String),
-      venue: expect.any(String),
-      description: expect.any(String),
-    });
+    expect(foundVenue.organisationId).toBe(1);
+    expect(foundVenue.name.length).toBeGreaterThan(0);
+    expect(foundVenue.coordinates).toEqual(
+      expect.objectContaining({
+        lat: expect.any(Number),
+        lng: expect.any(Number),
+      }),
+    );
+
+    const featured = (
+      await api
+        .get(events.path, {
+          searchParams: { organisationId, featured: true },
+        })
+        .json(events.schema)
+    )[0];
+    expect(featured?.featured).toBe(true);
+    expect(featured?.organisationId).toBe(1);
   });
 
-  it("keeps customers + bookings empty until a booking screen writes them", async () => {
-    expect(await (await api("/customers")).json()).toEqual([]);
-    expect(await (await api("/bookings")).json()).toEqual([]);
-  });
-
-  it("persists PATCH back into db.json (and we restore the seed name)", async () => {
-    const before = await (await api("/profile/1")).json();
-
-    const patched = await (
-      await api("/profile/1", {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: "Temp Test Name" }),
+  it("public Events use visibility + per-Event price tiers (not a global TicketType)", async () => {
+    const publicEvents = await api
+      .get(events.path, {
+        searchParams: { organisationId, visibility: "public" },
       })
-    ).json();
-    expect(patched.name).toBe("Temp Test Name");
+      .json(events.schema);
+    expect(publicEvents).toHaveLength(2);
+    expect(publicEvents.every((e) => e.visibility === "public")).toBe(true);
 
-    // Prove a fresh read sees the write (same process, living file).
-    const reread = await (await api("/profile/1")).json();
-    expect(reread.name).toBe("Temp Test Name");
-
-    await api("/profile/1", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name: before.name }),
-    });
+    const tiers = await api
+      .get(priceTier.list.path, {
+        searchParams: { organisationId, eventId: publicEvents[0]!.id },
+      })
+      .json(priceTier.list.schema);
+    expect(tiers.map((t) => t.label).sort()).toEqual([
+      "Adult",
+      "Baby",
+      "Child",
+    ]);
+    expect(tiers.find((t) => t.label === "Baby")?.consumesCapacity).toBe(false);
   });
 
-  it("filters with query strings — bookings for an event (admin 'who's coming')", async () => {
-    // Shape we'll use later: POST /customers, POST /bookings { customerId, eventId },
-    // then GET /bookings?eventId=1. Empty filter still returns [].
-    const forEvent = await (await api("/bookings?eventId=1")).json();
-    expect(forEvent).toEqual([]);
+  it("records a party Booking with tier-based Tickets", async () => {
+    const publicEvent = (
+      await api
+        .get(events.path, {
+          searchParams: { organisationId, visibility: "public" },
+        })
+        .json(events.schema)
+    )[0]!;
+    const tiers = await api
+      .get(priceTier.list.path, {
+        searchParams: { organisationId, eventId: publicEvent.id },
+      })
+      .json(priceTier.list.schema);
+    const adultTier = tiers.find((t) => t.label === "Adult")!;
+    const childTier = tiers.find((t) => t.label === "Child")!;
+    const babyTier = tiers.find((t) => t.label === "Baby")!;
+
+    const payer = await ensureCustomer(api, {
+      email: "parent@example.com",
+      name: "Alex Parent",
+      phone: "+447700900001",
+      marketingOptIn: true,
+    });
+    expect(payer.organisationId).toBe(1);
+
+    const createdBooking = await api
+      .post(bookings.path, {
+        json: {
+          organisationId,
+          customerId: payer.id,
+          eventId: publicEvent.id,
+          status: "paid",
+          stripeSessionId: null,
+          createdAt: new Date().toISOString(),
+        },
+      })
+      .json(booking.schema);
+
+    const adult = await api
+      .post(tickets.path, {
+        json: {
+          organisationId,
+          bookingId: createdBooking.id,
+          priceTierId: adultTier.id,
+          name: "Alex Parent",
+          phone: "+447700900001",
+          ageYears: null,
+          responsibleAdultTicketId: null,
+        },
+      })
+      .json(ticket.schema);
+
+    await api
+      .post(tickets.path, {
+        json: {
+          organisationId,
+          bookingId: createdBooking.id,
+          priceTierId: childTier.id,
+          name: "Sam",
+          phone: null,
+          ageYears: 6,
+          responsibleAdultTicketId: adult.id,
+        },
+      })
+      .json(ticket.schema);
+
+    await api
+      .post(tickets.path, {
+        json: {
+          organisationId,
+          bookingId: createdBooking.id,
+          priceTierId: babyTier.id,
+          name: "Jo",
+          phone: null,
+          ageYears: 0,
+          responsibleAdultTicketId: adult.id,
+        },
+      })
+      .json(ticket.schema);
+
+    const partyTickets = await api
+      .get(tickets.path, {
+        searchParams: {
+          organisationId,
+          bookingId: createdBooking.id,
+        },
+      })
+      .json(tickets.schema);
+    expect(partyTickets).toHaveLength(3);
+
+    const paid = partyTickets.filter((t) => {
+      const tier = tiers.find((x) => x.id === t.priceTierId);
+      return tier?.consumesCapacity;
+    });
+    expect(paid).toHaveLength(2);
+
+    // Schema round-trip on a single Event fetch
+    await api.get(event.path(publicEvent.id)).json(event.schema);
   });
 });
