@@ -135,7 +135,7 @@ describe("org-scoped mock shape", () => {
           eventId: publicEvent.id,
           status: "paid",
           stripeSessionId: null,
-          createdAt: new Date().toISOString(),
+          createdAt: Temporal.Now.instant().toString(),
         },
       })
       .json(booking.schema);

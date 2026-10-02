@@ -20,6 +20,7 @@
     "@solidjs/web": "2.0.0-rc.9",
     "ky": "^2.1.0",
     "solid-js": "2.0.0-rc.9",
+    "temporal-polyfill": "^1.0.5",
     "zod": "^4.6.5"
   },
   "devDependencies": {

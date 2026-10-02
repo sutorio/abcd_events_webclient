@@ -7,6 +7,18 @@
  */
 import { z } from "zod";
 
+/** Wall-clock event time without offset (e.g. `2026-11-14T14:00:00`). */
+export const PlainDateTimeStringSchema = z.string().refine(
+  (value) => {
+    try {
+      Temporal.PlainDateTime.from(value);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  { error: "Invalid PlainDateTime" },
+);
 export const EventVisibilitySchema = z.enum(["public", "private"]);
 export type EventVisibility = z.infer<typeof EventVisibilitySchema>;
 
@@ -73,7 +85,7 @@ export const EventSchema = z.object({
   /** Homepage hero — at most one true per Organisation (enforced later). */
   featured: z.boolean(),
   title: z.string(),
-  startsAt: z.string(),
+  startsAt: PlainDateTimeStringSchema,
   description: z.string(),
   /** Max Tickets that consume capacity (see PriceTier.consumesCapacity). */
   capacity: z.number().int().nonnegative(),

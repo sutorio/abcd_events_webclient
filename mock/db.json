@@ -46,7 +46,7 @@
       "visibility": "public",
       "featured": true,
       "title": "Silent Disco — Younger children",
-      "startsAt": "2026-06-14T14:00:00",
+      "startsAt": "2026-11-14T14:00:00",
       "description": "An afternoon silent disco for younger children and their accompanying adults. Headsets for adults and children; babies welcome (free, registered).",
       "capacity": 40
     },
@@ -57,7 +57,7 @@
       "visibility": "public",
       "featured": false,
       "title": "Silent Disco — Older children",
-      "startsAt": "2026-06-14T17:00:00",
+      "startsAt": "2026-11-14T17:00:00",
       "description": "An early-evening silent disco for slightly older children and their accompanying adults. Headsets for adults and children; babies welcome (free, registered).",
       "capacity": 40
     }
@@ -170,6 +170,33 @@
       "stripeSessionId": null,
       "createdAt": "2026-09-29T14:08:46.417Z",
       "id": 4
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-10-02T11:47:12.154Z",
+      "id": 5
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-10-02T11:50:39.777513916Z",
+      "id": 6
+    },
+    {
+      "organisationId": 1,
+      "customerId": 1,
+      "eventId": 1,
+      "status": "paid",
+      "stripeSessionId": null,
+      "createdAt": "2026-10-02T11:55:31.21851001Z",
+      "id": 7
     }
   ],
   "tickets": [
@@ -292,6 +319,96 @@
       "ageYears": 0,
       "responsibleAdultTicketId": 10,
       "id": 12
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 5,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 13
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 5,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 13,
+      "id": 14
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 5,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 13,
+      "id": 15
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 6,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 16
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 6,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 16,
+      "id": 17
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 6,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 16,
+      "id": 18
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 7,
+      "priceTierId": 1,
+      "name": "Alex Parent",
+      "phone": "+447700900001",
+      "ageYears": null,
+      "responsibleAdultTicketId": null,
+      "id": 19
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 7,
+      "priceTierId": 2,
+      "name": "Sam",
+      "phone": null,
+      "ageYears": 6,
+      "responsibleAdultTicketId": 19,
+      "id": 20
+    },
+    {
+      "organisationId": 1,
+      "bookingId": 7,
+      "priceTierId": 3,
+      "name": "Jo",
+      "phone": null,
+      "ageYears": 0,
+      "responsibleAdultTicketId": 19,
+      "id": 21
     }
   ]
 }
